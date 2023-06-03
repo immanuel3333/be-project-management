@@ -35,6 +35,7 @@ public class ProjectService {
     public Project create(Project newProject, Long id) {
         Customeruser customeruser = customeruserRepository.findById(id)
                 .orElseThrow(() -> new CustomeruserNotFoundException("Customer user with ID " + id + " not found"));
+
         Project savedProject = projectRepository.save(newProject);
 
         MemberProject memberProject = MemberProject.builder()

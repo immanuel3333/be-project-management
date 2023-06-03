@@ -31,7 +31,7 @@ public class ProjectStatusController {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectStatusResponse);
     }
 
-    @GetMapping("/projects/{idProject}/status")
+    @GetMapping("/project/{idProject}/status")
     public ResponseEntity<List<ProjectStatusResponse>> getAllStatus(@PathVariable("idProject") Long projectId) {
         List<ProjectStatus> projectStatuses = this.projectStatusService.getAllProjectStatus(projectId);
         return ResponseEntity

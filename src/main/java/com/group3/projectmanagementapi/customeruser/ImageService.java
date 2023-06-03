@@ -28,10 +28,10 @@ public class ImageService {
         }
     }
 
-    public String save(MultipartFile file) {
+    public String save(MultipartFile file, String fileName) {
         try {
-            Files.copy(file.getInputStream(), this.root.resolve(file.getOriginalFilename()));
-            return this.root.toString() + "/" + file.getOriginalFilename();
+            Files.copy(file.getInputStream(), this.root.resolve(fileName));
+            return this.root.toString() + "/" + fileName;
         } catch (Exception e) {
             if (e instanceof FileAlreadyExistsException) {
                 throw new RuntimeException("A file of that name already exists.");

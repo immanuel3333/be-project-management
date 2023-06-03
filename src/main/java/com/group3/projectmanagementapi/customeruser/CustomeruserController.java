@@ -1,8 +1,9 @@
 package com.group3.projectmanagementapi.customeruser;
 
-import java.util.List;
 import java.io.IOException;
+import java.util.List;
 
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -10,17 +11,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.core.io.Resource;
-
 import com.group3.projectmanagementapi.customeruser.model.Customeruser;
 import com.group3.projectmanagementapi.customeruser.model.Image;
 import com.group3.projectmanagementapi.customeruser.model.dto.CustomeruserCustomeResponse;
-import com.group3.projectmanagementapi.customeruser.model.dto.CustomeruserLoginRequest;
 import com.group3.projectmanagementapi.customeruser.model.dto.CustomeruserRegisterRequest;
 import com.group3.projectmanagementapi.customeruser.model.dto.CustomeruserResponse;
 
@@ -53,28 +50,48 @@ public class CustomeruserController {
 
     @PostMapping(value = "/register", consumes = { MediaType.APPLICATION_JSON_VALUE,
             MediaType.MULTIPART_FORM_DATA_VALUE })
-    public ResponseEntity<CustomeruserResponse> createOneWithImage(
+    public ResponseEntity<CustomeruserCustomeResponse> createOneWithImage(
             @Valid @RequestPart("customeruserRequest") CustomeruserRegisterRequest customeruserRegisterRequest,
-            @RequestPart("image") MultipartFile imageFile) {
+            @RequestPart("image") MultipartFile imageFile, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            String errors = bindingResult.getAllErrors().get(0).getDefaultMessage();
+
+            CustomeruserCustomeResponse response = new CustomeruserCustomeResponse(400, errors, null);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         if (customeruserRegisterRequest.getName().isBlank()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
-        String url = this.imageService.save(imageFile);
-        Customeruser newMovie = customeruserRegisterRequest.convertToEntity();
-        Image image = Image.builder().name(imageFile.getOriginalFilename()).type(imageFile.getContentType()).url(url)
-                .build();
-        newMovie.setImage(image);
-        Customeruser saveMovie = this.customeruserService.createOne(newMovie);
-        CustomeruserResponse movieResponse = saveMovie.convertToResponse();
+        long timestamp = System.currentTimeMillis();
+        String fileName = Long.toString(timestamp)
+                + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf("."));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(movieResponse);
+        String url = this.imageService.save(imageFile, fileName);
+
+        Customeruser newCust = customeruserRegisterRequest.convertToEntity();
+        Image image = Image.builder().name(fileName).type(imageFile.getContentType()).url(url)
+                .build();
+        newCust.setImage(image);
+        Customeruser saveCust = this.customeruserService.createOne(newCust);
+
+        if (saveCust != null) {
+            CustomeruserCustomeResponse response = new CustomeruserCustomeResponse(201, "Registration successful",
+                    saveCust.convertToResponse());
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        }
+
+        CustomeruserCustomeResponse response = new CustomeruserCustomeResponse(400, "Username already exists",
+                null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping("/customerusers/{id}/images")
-    public ResponseEntity<byte[]> getOneImageByMovie(@PathVariable("id") Long id) throws IOException {
-        Customeruser movie = this.customeruserService.findOneById(id);
-        Image image = movie.getImage();
+    public ResponseEntity<byte[]> getOneImageByCustomer(@PathVariable("id") Long id) throws IOException {
+        Customeruser customeruser = this.customeruserService.findOneById(id);
+        Image image = customeruser.getImage();
         Resource resource = this.imageService.load(image);
 
         return ResponseEntity.ok().contentType(MediaType.valueOf(image.getType()))
