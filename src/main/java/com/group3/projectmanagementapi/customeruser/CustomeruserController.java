@@ -65,6 +65,9 @@ public class CustomeruserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
 
+        System.out.println("IMAGE FILE" + imageFile);
+        System.out.println("image get original file name" + imageFile.getOriginalFilename());
+
         long timestamp = System.currentTimeMillis();
         String fileName = Long.toString(timestamp)
                 + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf("."));
