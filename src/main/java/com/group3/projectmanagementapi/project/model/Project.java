@@ -1,14 +1,17 @@
-package com.group3.projectmanagementapi.project;
+package com.group3.projectmanagementapi.project.model;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.group3.projectmanagementapi.memberproject.dto.MemberProject;
-import com.group3.projectmanagementapi.project.dto.ProjectResponse;
-import com.group3.projectmanagementapi.projectstatus.dto.ProjectStatus;
+import com.group3.projectmanagementapi.memberproject.models.MemberProject;
+import com.group3.projectmanagementapi.project.model.dto.ProjectDetailedResponse;
+import com.group3.projectmanagementapi.project.model.dto.ProjectResponse;
+import com.group3.projectmanagementapi.projectstatus.model.ProjectStatus;
+import com.group3.projectmanagementapi.projectstatus.model.dto.ProjectStatusDetailedResponse;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -46,5 +49,17 @@ public class Project {
 
     public ProjectResponse convertToResponse() {
         return ProjectResponse.builder().id(id).title(title).build();
+    }
+
+    public ProjectDetailedResponse convertToDetailedResponse() {
+        List<ProjectStatusDetailedResponse> projectStatusResponses = projectStatus.stream()
+                .map(ProjectStatus::convertToDetailedResponse)
+                .collect(Collectors.toList());
+
+        return ProjectDetailedResponse.builder()
+                .id(id)
+                .title(title)
+                .projectStatuses(projectStatusResponses)
+                .build();
     }
 }

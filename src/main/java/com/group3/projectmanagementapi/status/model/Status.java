@@ -1,4 +1,4 @@
-package com.group3.projectmanagementapi.status;
+package com.group3.projectmanagementapi.status.model;
 
 import java.util.List;
 
@@ -6,8 +6,9 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.group3.projectmanagementapi.projectstatus.dto.ProjectStatus;
-import com.group3.projectmanagementapi.status.dto.StatusResponse;
+import com.group3.projectmanagementapi.card.model.Card;
+import com.group3.projectmanagementapi.projectstatus.model.ProjectStatus;
+import com.group3.projectmanagementapi.status.model.dto.StatusResponse;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -37,6 +38,11 @@ public class Status {
     @Cascade(CascadeType.ALL)
     @JsonIgnore
     private List<ProjectStatus> projectStatus;
+
+    @OneToMany(mappedBy = "status")
+    @Cascade(CascadeType.ALL)
+    @JsonIgnore
+    private List<Card> cards;
 
     public StatusResponse convertToResponse() {
         return StatusResponse.builder().id(id).status(status).build();

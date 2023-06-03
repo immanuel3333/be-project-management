@@ -10,8 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.group3.projectmanagementapi.card.exception.CardNotFoundException;
+import com.group3.projectmanagementapi.customeruser.exception.CustomeruserNotFoundException;
+import com.group3.projectmanagementapi.project.exception.ProjectNotFoundException;
+import com.group3.projectmanagementapi.status.exception.StatusNotFoundException;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
@@ -42,14 +48,15 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     // return errorResponse;
     // }
 
-    // @ExceptionHandler(value = { ProjectNotFoundException.class })
-    // protected ResponseEntity<Object> handleConflict(
-    // RuntimeException exception, WebRequest request) {
-    // Map<String, String> error = new HashMap<>();
-    // error.put("message", exception.getMessage());
-    // return super.handleExceptionInternal(exception, error, new HttpHeaders(),
-    // HttpStatus.NOT_FOUND, request);
-    // }
+    @ExceptionHandler(value = { ProjectNotFoundException.class, CardNotFoundException.class,
+            CustomeruserNotFoundException.class, ProjectNotFoundException.class, StatusNotFoundException.class })
+    protected ResponseEntity<Object> handleConflict(
+            RuntimeException exception, WebRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("message", exception.getMessage());
+        return super.handleExceptionInternal(exception, error, new HttpHeaders(),
+                HttpStatus.NOT_FOUND, request);
+    }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

@@ -28,9 +28,13 @@ public class UserPrincipal implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Getter
+    private Long customerId;
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(UUID id, String name, String username, String email, String password) {
+    public UserPrincipal(UUID id, String name, String username, String email, String password, Long customerId) {
+        this.customerId = customerId;
         this.id = id;
         this.name = name;
         this.username = username;
@@ -41,7 +45,7 @@ public class UserPrincipal implements UserDetails {
 
     public static UserPrincipal build(ApplicationUser applicationUser) {
         return new UserPrincipal(applicationUser.getId(), applicationUser.getName(), applicationUser.getUsername(),
-                applicationUser.getEmail(), applicationUser.getPassword());
+                applicationUser.getEmail(), applicationUser.getPassword(), applicationUser.getCustomer().getId());
     }
 
     @Override

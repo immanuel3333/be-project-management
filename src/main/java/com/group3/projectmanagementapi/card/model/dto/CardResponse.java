@@ -2,8 +2,8 @@ package com.group3.projectmanagementapi.card.model.dto;
 
 import java.sql.Timestamp;
 
-import com.group3.projectmanagementapi.project.dto.ProjectResponse;
-import com.group3.projectmanagementapi.status.dto.StatusResponse;
+import com.group3.projectmanagementapi.project.model.dto.ProjectResponse;
+import com.group3.projectmanagementapi.status.model.dto.StatusResponse;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

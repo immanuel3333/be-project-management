@@ -54,4 +54,8 @@ public class CustomeruserService {
         return null;
     }
 
+    public List<Customeruser> getCustomersNotInProject(Long projectId) {
+        return this.customeruserRepository.findUnassignedUsers(projectId);
+    }
+
 }

@@ -50,7 +50,6 @@ public class WebSecurityConfigurer {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeHttpRequests().requestMatchers("/tokens").permitAll().and()
                 .authorizeHttpRequests().requestMatchers("/login").permitAll().and()
                 .authorizeHttpRequests().requestMatchers("/register").permitAll().and()
                 .authorizeHttpRequests().anyRequest().authenticated();
@@ -61,6 +60,6 @@ public class WebSecurityConfigurer {
 
     @Bean
     WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api-docs/**");
+        return (web) -> web.ignoring().requestMatchers("/swagger-ui/**", "/v3/api-docs/**");
     }
 }

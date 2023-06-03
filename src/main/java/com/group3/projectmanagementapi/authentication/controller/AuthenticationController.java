@@ -26,7 +26,7 @@ public class AuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @PostMapping("/tokens")
+    @PostMapping("/login")
     public ResponseEntity<JwtResponseDto> login(@RequestBody LoginRequestDto loginRequestDto) {
         logger.info("Attempt login to system: {}", loginRequestDto);
 

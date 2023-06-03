@@ -37,6 +37,7 @@ public class JwtProvider {
 
         Map<String, Object> userInformation = new HashMap<>();
         userInformation.put("userId", userPrincipal.getId());
+        userInformation.put("customerId", userPrincipal.getCustomerId());
         userInformation.put("username", userPrincipal.getUsername());
         userInformation.put("name", userPrincipal.getName());
         userInformation.put("email", userPrincipal.getEmail());

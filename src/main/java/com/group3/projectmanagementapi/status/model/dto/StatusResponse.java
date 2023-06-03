@@ -1,4 +1,4 @@
-package com.group3.projectmanagementapi.status.dto;
+package com.group3.projectmanagementapi.status.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

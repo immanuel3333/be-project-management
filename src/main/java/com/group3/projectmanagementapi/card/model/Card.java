@@ -2,15 +2,14 @@ package com.group3.projectmanagementapi.card.model;
 
 import java.sql.Timestamp;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.group3.projectmanagementapi.card.model.dto.CardResponse;
-import com.group3.projectmanagementapi.project.Project;
-import com.group3.projectmanagementapi.status.Status;
+import com.group3.projectmanagementapi.card.model.dto.CardResponseForProject;
+import com.group3.projectmanagementapi.project.model.Project;
+import com.group3.projectmanagementapi.status.model.Status;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -43,13 +42,11 @@ public class Card {
     private String description;
 
     @ManyToOne
-    @Cascade(value = CascadeType.ALL)
     @JoinColumn(name = "status_id")
     @JsonIgnore
     private Status status;
 
     @ManyToOne
-    @Cascade(value = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     @JsonIgnore
     private Project project;
@@ -65,4 +62,13 @@ public class Card {
         return CardResponse.builder().id(id).title(title).description(description).status(status.convertToResponse())
                 .project(project.convertToResponse()).createdAt(createdAt).updatedAt(updatedAt).build();
     }
+
+    public CardResponseForProject convertForProjectResponse() {
+        return CardResponseForProject.builder()
+                .id(id)
+                .title(title)
+                .description(description)
+                .build();
+    }
+
 }

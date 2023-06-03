@@ -1,7 +1,8 @@
-package com.group3.projectmanagementapi.memberproject.dto;
+package com.group3.projectmanagementapi.memberproject.models;
 
 import com.group3.projectmanagementapi.customeruser.model.Customeruser;
-import com.group3.projectmanagementapi.project.Project;
+import com.group3.projectmanagementapi.memberproject.models.dto.MemberProjectResponse;
+import com.group3.projectmanagementapi.project.model.Project;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,4 +34,13 @@ public class MemberProject {
     @ManyToOne
     @JoinColumn(name = "customeruser_id")
     private Customeruser customeruser;
+
+    public MemberProjectResponse convertToResponse() {
+        return MemberProjectResponse.builder()
+                .id(id)
+                .project(project.convertToResponse())
+                .customeruser(customeruser.convertToResponse())
+                .build();
+
+    }
 }
