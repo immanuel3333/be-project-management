@@ -61,15 +61,7 @@ public class CustomeruserController {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        if (customeruserRegisterRequest.getName().isBlank()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-        System.out.println("IMAGE FILE" + imageFile);
-        System.out.println("image get original file name" + imageFile.getOriginalFilename());
-
-        long timestamp = System.currentTimeMillis();
-        String fileName = Long.toString(timestamp)
+        String fileName = Long.toString(System.currentTimeMillis())
                 + imageFile.getOriginalFilename().substring(imageFile.getOriginalFilename().lastIndexOf("."));
 
         String url = this.imageService.save(imageFile, fileName);

@@ -48,15 +48,16 @@ public class ProjectStatus {
 
     public ProjectStatusDetailedResponse convertToDetailedResponse() {
         List<CardResponseForProject> cardResponses = status.getCards().stream()
-            .map(Card::convertForProjectResponse)
-            .collect(Collectors.toList());
-    
+                .filter(card -> card.getProject().getId().equals(project.getId()))
+                .map(Card::convertForProjectResponse)
+                .collect(Collectors.toList());
+
         StatusResponse statusResponse = status.convertToResponse();
-    
+
         return ProjectStatusDetailedResponse.builder()
-            .id(id)
-            .status(statusResponse)
-            .cards(cardResponses)
-            .build();
+                .id(id)
+                .status(statusResponse)
+                .cards(cardResponses)
+                .build();
     }
 }
