@@ -12,6 +12,6 @@ public interface CustomeruserRepository extends JpaRepository<Customeruser, Long
 
     Customeruser findByUsername(String username);
 
-    @Query("SELECT c FROM Customeruser c WHERE NOT EXISTS (SELECT 1 FROM MemberProject mp WHERE mp.project.id = ?1 AND mp.customeruser.id = c.id)")
-    List<Customeruser> findUnassignedUsers(Long projectId);
+    @Query("SELECT c FROM Customeruser c WHERE NOT EXISTS (SELECT 1 FROM MemberProject mp WHERE mp.project.id = ?1 AND mp.customeruser.id = c.id) AND email = ?2")
+    List<Customeruser> findUnassignedUsers(Long projectId, String email);
 }

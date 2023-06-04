@@ -1,6 +1,7 @@
 package com.group3.projectmanagementapi.customeruser;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,8 @@ public class CustomeruserService {
     }
 
     public Customeruser createOne(Customeruser customeruser) {
-        Customeruser isExists = this.findByUsername(customeruser.getUsername());
+        Customeruser isExists = this.customeruserRepository.findByUsernameOrEmail(customeruser.getUsername(),
+                customeruser.getEmail());
 
         if (isExists != null) {
             return null;
@@ -54,8 +56,11 @@ public class CustomeruserService {
         return null;
     }
 
-    public List<Customeruser> getCustomersNotInProject(Long projectId) {
-        return this.customeruserRepository.findUnassignedUsers(projectId);
+    public List<Customeruser> getCustomersNotInProject(Long projectId, Optional<String> optionalEmail) {
+        if (optionalEmail.isPresent()) {
+            return this.customeruserRepository.findUnassignedUsers(projectId, optionalEmail.get());
+        }
+        return this.customeruserRepository.findUnassignedUsers(projectId, optionalEmail.get());
     }
 
 }
